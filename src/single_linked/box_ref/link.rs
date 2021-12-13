@@ -4,36 +4,27 @@ pub type Node<T> = Box<LinkNode<T>>;
 
 pub struct LinkNode<T> {
     pub val: T,
-    pub next: Option<Node<T>>
+    pub next: Option<Node<T>>,
 }
-impl <T: Debug + Display>LinkNode<T> {
-    pub fn new(val:T) -> Self {
-        LinkNode {
-            val,
-            next: None
-        }
+impl<T: Debug + Display> LinkNode<T> {
+    pub fn new(val: T) -> Self {
+        LinkNode { val, next: None }
     }
 
-    pub fn from(val:T, next: Option<Node<T>>) -> Self{
-        LinkNode {
-            val, next
-        }
+    pub fn from(val: T, next: Option<Node<T>>) -> Self {
+        LinkNode { val, next }
     }
-
 }
 
 pub struct LinkList<T: Display> {
     head: Option<Box<LinkNode<T>>>,
-    len: u32
+    len: u32,
 }
-impl <T: Display + Debug>LinkList<T> {
+impl<T: Display + Debug> LinkList<T> {
     pub fn new() -> Self {
-        LinkList {
-            head: None,
-            len: 0
-        }
+        LinkList { head: None, len: 0 }
     }
-    
+
     /* 向后追加 */
     pub fn push_back(&mut self, e: T) -> () {
         let node = LinkNode::new(e);
@@ -95,7 +86,7 @@ impl <T: Display + Debug>LinkList<T> {
 
     /* 在指定索引插入元素 */
     pub fn insert(&mut self, index: u32, val: T) -> bool {
-        if index > self.size(){
+        if index > self.size() {
             return false;
         }
         /* 如果index == 0，直接take */
@@ -111,10 +102,10 @@ impl <T: Display + Debug>LinkList<T> {
                 self.head = Some(Box::new(LinkNode::new(val)));
                 self.len += 1;
                 return true;
-            },
+            }
             Some(mut curr) => {
                 /* 获取需要插入元素位置的前一个位置元素 */
-                for _i in 0..index - 1{
+                for _i in 0..index - 1 {
                     curr = curr.next.as_mut().unwrap();
                 }
                 // 拿到后缀节点
@@ -152,7 +143,7 @@ impl <T: Display + Debug>LinkList<T> {
     /* 输出元素 */
     pub fn show(&mut self) -> () {
         let mut cursor = self.head.as_mut().unwrap();
-        for _i in 0..self.len  {
+        for _i in 0..self.len {
             print!(" {} ", cursor.val);
             if cursor.next.is_some() {
                 print!("->");
@@ -171,5 +162,4 @@ impl <T: Display + Debug>LinkList<T> {
     pub fn empty(&self) -> bool {
         self.head.is_none()
     }
-
 }

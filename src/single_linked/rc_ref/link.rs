@@ -4,18 +4,16 @@ use std::rc::Rc;
 type Node<T> = Option<Rc<RefCell<LinkNode<T>>>>;
 struct LinkNode<T> {
     val: T,
-    next: Option<Rc<RefCell<LinkNode<T>>>>
+    next: Option<Rc<RefCell<LinkNode<T>>>>,
 }
 // #[debug()]
-impl <T: Display>LinkNode<T> {
+impl<T: Display> LinkNode<T> {
     pub fn new(val: T) -> Self {
-        Self {
-            val, next: None
-        }
+        Self { val, next: None }
     }
 
     pub fn from(val: T, next: Node<T>) -> Self {
-        Self {val, next}
+        Self { val, next }
     }
 
     pub fn to_ref_cell(self) -> RefCell<LinkNode<T>> {
@@ -33,7 +31,7 @@ impl <T: Display>LinkNode<T> {
     pub fn set_next(&mut self, next: Node<T>) -> () {
         if next.is_none() {
             self.next = None;
-            return
+            return;
         }
         let next_node = next.as_ref().unwrap();
         self.next = Some(Rc::clone(next_node));
@@ -42,12 +40,15 @@ impl <T: Display>LinkNode<T> {
 
 pub struct Link<T> {
     root: Node<T>,
-    pub size: usize
+    pub size: usize,
 }
 
-impl <T: Display>Link<T> {
+impl<T: Display> Link<T> {
     pub fn new() -> Self {
-        Self {root: None, size: 0}
+        Self {
+            root: None,
+            size: 0,
+        }
     }
 
     /* 在指定索引插入元素 */
@@ -61,7 +62,7 @@ impl <T: Display>Link<T> {
             /* 头节点为None，直接赋值 */
             if self.root.is_none() {
                 self.root = node.to_option();
-            }else {
+            } else {
                 /* 不为None，则take */
                 node.set_next(Some(self.root.take().unwrap().clone()));
                 self.root = node.to_option();
@@ -105,12 +106,12 @@ impl <T: Display>Link<T> {
             if next_node_option.is_none() {
                 self.root = None;
                 self.size -= 1;
-                return ;
+                return;
             }
             let next_node = next_node_option.as_ref().unwrap();
             self.root = Some(Rc::clone(next_node));
             self.size -= 1;
-            return ;
+            return;
             /* 处理删除元素非头节点的情况 */
         } else {
             /* 与insert的移动节点逻辑一致 */
@@ -133,8 +134,6 @@ impl <T: Display>Link<T> {
             curr_node.next = next_node_option;
             self.size -= 1;
         }
-
-
     }
 
     /* 更新指定索引处的元素 */

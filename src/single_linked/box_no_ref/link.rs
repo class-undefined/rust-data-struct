@@ -4,28 +4,27 @@ type Node<T> = Option<Box<LinkNode<T>>>;
 #[derive(Debug)]
 pub struct LinkNode<T> {
     val: T,
-    next: Node<T>
+    next: Node<T>,
 }
-
 
 #[derive(Debug)]
 pub struct Link<T> {
     pub head: Node<T>,
-    pub size: usize
+    pub size: usize,
 }
 
 pub trait LinkNodeMethod<T> {
     fn new(val: T, next: Node<T>) -> LinkNode<T> {
-        LinkNode {
-            val, next
-        }
+        LinkNode { val, next }
     }
 }
 
-/* 不使用引用，就先将每个Box元素用数组存起来 */
 pub trait LinkMethod<T> {
     fn new() -> Link<T> {
-        Link { head: None, size: 0 }
+        Link {
+            head: None,
+            size: 0,
+        }
     }
 
     fn insert(self, index: usize, val: T) -> Link<T>;
@@ -37,11 +36,9 @@ pub trait LinkMethod<T> {
     fn show(self) -> Link<T>;
 }
 
-impl <T>LinkNodeMethod<T> for LinkNode<T> {
-    
-}
+impl<T> LinkNodeMethod<T> for LinkNode<T> {}
 
-impl <T>LinkNode<T> {
+impl<T> LinkNode<T> {
     fn to_box(self) -> Box<LinkNode<T>> {
         Box::new(self)
     }
@@ -61,23 +58,21 @@ impl <T>LinkNode<T> {
     /* 获取当前节点之后的第index个节点 */
     pub fn get<'a>(&'a mut self, index: usize) -> Option<&'a mut Self> {
         if index == 0 {
-            return Some(self)
-        } 
+            return Some(self);
+        }
         if self.next.is_none() {
             None
         } else {
             self.next.as_mut().unwrap().as_mut().get(index - 1)
         }
     }
-
-
 }
 
-impl <T>Link<T> {
+impl<T> Link<T> {
     pub fn new() -> Self {
         Self {
             head: None,
-            size: 0
+            size: 0,
         }
     }
 
@@ -100,9 +95,12 @@ impl <T>Link<T> {
     }
 }
 
-impl <T:Copy + Display>LinkMethod<T> for Link<T> {
+impl<T: Copy + Display> LinkMethod<T> for Link<T> {
     fn new() -> Link<T> {
-        Link { head: None, size: 0 }
+        Link {
+            head: None,
+            size: 0,
+        }
     }
 
     fn insert(mut self, index: usize, val: T) -> Link<T> {
@@ -131,7 +129,7 @@ impl <T:Copy + Display>LinkMethod<T> for Link<T> {
                     Some(x) => {
                         new_head.push(x.val);
                         *x
-                    },
+                    }
                     None => break,
                 };
             }
@@ -141,7 +139,6 @@ impl <T:Copy + Display>LinkMethod<T> for Link<T> {
             return new_head;
         }
     }
-
 
     fn remove(mut self, index: usize) -> Link<T> {
         if index > self.size {
@@ -169,9 +166,8 @@ impl <T:Copy + Display>LinkMethod<T> for Link<T> {
             new_link.size = self.size - 1;
             new_link
         }
-        
     }
-    
+
     fn update(mut self, index: usize, new_val: T) -> Link<T> {
         if index >= self.size {
             panic!("index: {} 已越界，链表元素长度为size: {}", index, self.size);
@@ -196,13 +192,12 @@ impl <T:Copy + Display>LinkMethod<T> for Link<T> {
             new_link.size = self.size;
             return new_link;
         }
-        
     }
 
     fn show(self) -> Link<T> {
         let mut new_link = Link::new();
         let mut curr_node = *self.head.unwrap();
-        'target:for i in 0..self.size {
+        'target: for i in 0..self.size {
             new_link.push(curr_node.val);
             print!(" {} ", curr_node.val);
             if i != self.size - 1 {
